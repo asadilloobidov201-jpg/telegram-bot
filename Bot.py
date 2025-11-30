@@ -21,6 +21,7 @@ def yuklab_oling(url):
 
 # --- Foydalanuvchi yuborgan linkni qayta ishlash ---
 @bot.message_handler(func=lambda m: True)
+
 def get_video(msg):
     url = msg.text
 
@@ -32,7 +33,6 @@ def get_video(msg):
         bot.send_video(msg.chat.id, open(video, "rb"))
     else:
         bot.reply_to(msg, "❌ Video topilmadi. Linkni togri kiriting.")
-
 
 bot.polling()
 bot.py      
