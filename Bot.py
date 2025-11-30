@@ -1,7 +1,7 @@
 import telebot
 import requests
 
-BOT_TOKEN = "8292216685:AAHhGto9O_-oSBBe3bkKIe0Pyn7tzJF>
+BOT_TOKEN = "8292216685:AAHhGto9O_-oSBBe3bkKIe0Pyn7tzJFDPRc"
 bot = telebot.TeleBot(BOT_TOKEN)
 
 def download(url):
