@@ -32,7 +32,7 @@ def get_video(xabar):
     if video:
         bot.send_video(xabar.chat.id, open(video, "rb"))
     else:
-        bot.reply_to(xabar. "❌ Video topilmadi. Linkni togri kiriting."))
+        bot.reply_to(xabar. "❌ Video topilmadi. Linkni togri kiriting.")
 
 bot.polling()
 bot.py      
