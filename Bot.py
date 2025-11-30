@@ -5,7 +5,7 @@ import requests
 TOKEN = "8292216685:AAHhGto9O_-oSBBe3bkKIe0Pyn7tzJFDPRc"
 bot = telebot.TeleBot(TOKEN)
 
-# --- Video yuklab olish funksiyasi ---
+# --- Video yuklab olish ---
 def yuklab_oling(url):
     try:
         r = requests.get(url)
@@ -19,7 +19,6 @@ def yuklab_oling(url):
     except:
         return None
 
-
 # --- Foydalanuvchi yuborgan linkni qayta ishlash ---
 @bot.message_handler(func=lambda m: True)
 def get_video(xabar):
@@ -30,12 +29,12 @@ def get_video(xabar):
     video = yuklab_oling(url)
 
     if video:
-        # To‘g‘rilangan qator
         with open(video, "rb") as f:
             bot.send_video(xabar.chat.id, f)
     else:
-        bot.reply_to(xabar, "❌ Video topilmadi. Linkni to‘g‘ri kiriting.")
+        bot.reply_to(xabar, "❌ Video topilmadi. Linkni to'g'ri kiriting.")
 
+bot.polling()
 
 bot.polling()
 bot.polling()
