@@ -1,68 +1,52 @@
 import telebot
 import requests
-import subprocess
+import re
 
 TOKEN = "8292216685:AAHhGto9O_-oSBBe3bkKIe0Pyn7tzJFDPRc"
 bot = telebot.TeleBot(TOKEN)
 
-# --- Video yuklab olish ---
-def yuklab_ol(url):
+def get_instagram_video(url):
     try:
-        r = requests.get(url)
-        if r.status_code == 200:
-            with open("raw.mp4", "wb") as f:
-                f.write(r.content)
-            return "raw.mp4"
+        headers = {
+            "User-Agent": "Mozilla/5.0"
+        }
+        r = requests.get(url, headers=headers)
+
+        # Video URL ni HTML ichidan qidiramiz
+        video_url = re.search(r'"video_url":"(.*?)"', r.text)
+        if video_url:
+            real_url = video_url.group(1).replace("\\u0026", "&")
+            return real_url
         else:
             return None
-    except:
-        return None
 
-# --- Video formatini to‘g‘rilash (ffmpeg) ---
-def convert_video(input_file, output_file="video.mp4"):
-    try:
-        cmd = [
-            "ffmpeg",
-            "-i", input_file,
-            "-vcodec", "libx264",
-            "-acodec", "aac",
-            "-strict", "experimental",
-            output_file
-        ]
-        subprocess.run(cmd, check=True)
-        return output_file
     except:
         return None
 
 
-# --- Foydalanuvchi yuborgan linkni qayta ishlash ---
 @bot.message_handler(func=lambda m: True)
-def get_video(xabar):
-    url = xabar.text
+def handle_message(message):
+    url = message.text
 
-    bot.reply_to(xabar, "⏳ Yuklab olinmoqda...")
-
-    raw = yuklab_ol(url)
-
-    if not raw:
-        bot.reply_to(xabar, "❌ Video yuklab bo‘lmadi. Link xato bo‘lishi mumkin.")
+    if "instagram.com" not in url:
+        bot.reply_to(message, "❌ Iltimos Instagram link yuboring!")
         return
 
-    bot.send_message(xabar.chat.id, "♻️ Format o‘zgartirilmoqda...")
+    bot.reply_to(message, "⏳ Video topilmoqda...")
 
-    video = convert_video(raw)
-
-    if not video:
-        bot.reply_to(xabar, "❌ Video formatini o‘zgartirishda xato.")
+    video_url = get_instagram_video(url)
+    if not video_url:
+        bot.reply_to(message, "❌ Video URL topilmadi. Linkni tekshiring.")
         return
 
-    bot.send_message(xabar.chat.id, "📤 Yuborilmoqda...")
+    bot.reply_to(message, "⬇️ Yuklab olinmoqda...")
 
-    # --- Video yuborish ---
-    with open(video, "rb") as f:
-        bot.send_video(xabar.chat.id, f)
+    video = requests.get(video_url)
 
-    bot.send_message(xabar.chat.id, "✅ Tayyor!")
+    with open("video.mp4", "wb") as f:
+        f.write(video.content)
+
+    bot.send_video(message.chat.id, open("video.mp4", "rb"))
 
 
 bot.polling()
