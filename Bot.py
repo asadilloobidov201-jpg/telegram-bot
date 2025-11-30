@@ -27,12 +27,12 @@ def get_video(msg):
 
     bot.reply_to(msg, "⏳ Yuklab olinmoqda...")
 
-    bot.reply_to(msg,"❌ Video topilmadi. Linkni to‘g‘ri kiriting.")
+    video = yuklab_oling(url)
 
     if video:
         bot.send_video(msg.chat.id, open(video, "rb"))
     else:
-        bot.reply_to(msg, "❌ Video topilmadi. Linkni to'g'ri kiriting.")
+        bot.reply_to(msg, "❌ Video topilmadi. Linkni to‘g‘ri kiriting.")
 
 
 bot.polling()
