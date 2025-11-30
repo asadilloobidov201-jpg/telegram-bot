@@ -18,17 +18,17 @@ def start(msg):
     
 bot.javob_berish(msg, "🎬 Menga Instagram, YouTube yoki boshqa platformadan video havolasini yuboring!")
 @bot.message_handler(content_types=['text'])
+
 def get_video(msg):
     url = msg.text
-    bot.reply_to(msg, "⏳ Yuklab olinmoqda...")
+    bot.javob_berish(msg, "⏳ Yuklab olinmoqda...")
 
-    video = download(url)
+    video = yuklab_oling(url)
 
     if video:
-        bot.send_video(msg.chat.id, video)
-    
-bot.javob_berish(msg, "❌ Video topilmadi. Linkni to'g'ri kiriting.")
-bot.polling()
+        bot.yuborish_video(msg.suhbat.id, video)
+    else:
+        bot.javob_berish(msg, "❌ Video topilmadi. Linkni to'g'ri kiriting.")
 
 bot.py
 main.py
