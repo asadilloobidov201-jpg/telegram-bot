@@ -4,16 +4,15 @@ import requests
 TOKEN = "8292216685:AAHhGto9O_-oSBBe3bkKIe0Pyn7tzJFDPRc"
 bot = telebot.TeleBot(TOKEN)
 
-
 # --- Video yuklab olish funksiyasi ---
 def yuklab_oling(url):
     try:
-        r = requests.get(url)
+        r = requests.get(url, stream=True)
         if r.status_code == 200:
-            filename = "video.mp4"
-            with open(filename, "wb") as f:
+            file_name = "video.mp4"
+            with open(file_name, "wb") as f:
                 f.write(r.content)
-            return filename
+            return file_name
         else:
             return None
     except:
@@ -33,6 +32,9 @@ def get_video(msg):
         bot.send_video(msg.chat.id, open(video, "rb"))
     else:
         bot.reply_to(msg, "❌ Video topilmadi. Linkni to‘g‘ri kiriting.")
+
+
+bot.polling()
 bot.py      
 main.py
 app.py
