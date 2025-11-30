@@ -31,7 +31,7 @@ def get_video(msg):
     if video:
         bot.send_video(msg.chat.id, open(video, "rb"))
     else:
-        bot.reply_to(msg, )("❌ Video topilmadi. Linkni to‘g‘ri kiriting.")
+        bot.reply_to(msg, "❌ Video topilmadi. Linkni togri kiriting.")
 
 
 bot.polling()
