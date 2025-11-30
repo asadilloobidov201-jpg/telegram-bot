@@ -15,8 +15,8 @@ def download(url):
 
 @bot.message_handler(commands=['start'])
 def start(msg):
-    bot.reply_to(msg, "🎥 Menga Instagram, YouTube yoki>
-
+    
+bot.javob_berish(msg, "🎬 Menga Instagram, YouTube yoki boshqa platformadan video havolasini yuboring!")
 @bot.message_handler(content_types=['text'])
 def get_video(msg):
     url = msg.text
