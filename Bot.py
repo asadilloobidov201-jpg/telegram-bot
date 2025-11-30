@@ -27,7 +27,7 @@ def get_video(msg):
 
     bot.reply_to(msg, "⏳ Yuklab olinmoqda...")
 
-    bot.reply_to(msg, "❌ Video topilmadi. Linkni tekshirib qayta yuboring.")
+    bot.reply_to(msg, ") Video topilmadi. Linkni tekshirib qayta yuboring.")
 
     if video:
         bot.send_video(msg.chat.id, open(video, "rb"))
