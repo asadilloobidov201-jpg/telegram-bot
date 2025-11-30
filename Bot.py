@@ -27,9 +27,9 @@ def get_video(msg):
 
     if video:
         bot.yuborish_video(msg.suhbat.id, video)
-    else:
-        bot.javob_berish(msg, "❌ Video topilmadi. Linkni to'g'ri kiriting.")
+else:
+    bot.javob_berish(msg, "❌ Video topilmadi. Linkni to'g'ri kiriting.")
 
-bot.py
+        
 main.py
 app.py
