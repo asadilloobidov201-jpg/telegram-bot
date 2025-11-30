@@ -22,17 +22,17 @@ def yuklab_oling(url):
 # --- Foydalanuvchi yuborgan linkni qayta ishlash ---
 @bot.message_handler(func=lambda m: True)
 
-def get_video(msg):
-    url = msg.text
+def get_video(xabar):
+    url = xabar.text
 
-    bot.reply_to(msg, "⏳ Yuklab olinmoqda...")
+    bot.reply_to(xabar, "⏳ Yuklab olinmoqda...")
 
     video = yuklab_oling(url)
 
     if video:
-        bot.send_video(msg.chat.id, open(video, "rb"))
+        bot.send_video(xabar.chat.id, open(video, "rb"))
     else:
-        bot.reply_to(msg, "❌ Video topilmadi. Linkni togri kiriting.")
+        bot.reply_to(xabar. "❌ Video topilmadi. Linkni togri kiriting."))
 
 bot.polling()
 bot.py      
