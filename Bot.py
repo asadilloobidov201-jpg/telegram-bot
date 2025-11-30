@@ -1,60 +1,57 @@
+import telebot
+import yt_dlp
 import os
-import requests
-from telegram import Update
-from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
 
-TOKEN = os.getenv("8292216685:AAHhGto9O_-oSBBe3bkKIe0Pyn7tzJFDPRc")  # PythonAnywhere'ga qo'yasan
+TOKEN = "8292216685:AAHhGto9O_-oSBBe3bkKIe0Pyn7tzJFDPRc"
+bot = telebot.TeleBot(TOKEN, parse_mode='HTML')
 
-# --- Instagram API xizmatini shu yerga qo'yasan ---
-API_URL = "https://your-instagram-downloader-api.com/download?url="
-
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "Instagram link yuboring — videoni yuklab beraman 📥"
-    )
-
-
-async def download_instagram(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    url = update.message.text.strip()
-
-    if "instagram.com" not in url:
-        await update.message.reply_text("❌ Faqat Instagram link yuboring!")
-        return
-
-    await update.message.reply_text("⏳ Video yuklab olinmoqda...")
+# Video yuklab beruvchi funksiya
+def download_video(url):
+    output = "video.mp4"
+    ydl_opts = {
+        'format': 'mp4/best',
+        'outtmpl': output,
+        'quiet': True,
+        'nocheckcertificate': True,
+    }
 
     try:
-        # APIga so‘rov yuboramiz
-        response = requests.get(API_URL + url)
-        data = response.json()
-
-        if not data.get("video_url"):
-            await update.message.reply_text("❌ Videoni yuklashda xatolik!")
-            return
-
-        video_link = data["video_url"]
-
-        # Videoni Telegramga yuboramiz
-        await update.message.reply_video(video_link)
-
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([url])
+        return output
     except Exception as e:
-        await update.message.reply_text("❌ Serverda xatolik!")
-        print("Error:", e)
+        print("Xato:", e)
+        return None
 
+# Start komandasi
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.reply_to(message, "🎬 Assalomu alaykum!\nVideo link yuboring — men sizga yuklab beraman.")
 
-def main():
-    app = ApplicationBuilder().token(TOKEN).build()
+# Link qabul qilish
+@bot.message_handler(func=lambda m: True)
+def handle_link(message):
+    url = message.text.strip()
 
-    app.add_handler(MessageHandler(filters.COMMAND, start))
-    app.add_handler(MessageHandler(filters.TEXT, download_instagram))
+    if not url.startswith("http"):
+        return bot.reply_to(message, "❌ Iltimos to‘g‘ri link yuboring.")
 
-    print("Bot ishga tushdi!")
-    app.run_polling()
+    sent = bot.reply_to(message, "⏳ Video yuklanmoqda...")
 
+    file = download_video(url)
 
-if __name__ == "__main__":
-    main()
+    if file:
+        try:
+            bot.send_video(message.chat.id, open(file, "rb"))
+            os.remove(file)
+            bot.delete_message(message.chat.id, sent.id)
+        except:
+            bot.edit_message_text("❌ Videoni yuborib bo‘lmadi!", message.chat.id, sent.id)
+    else:
+        bot.edit_message_text("❌ Videoni yuklab bo‘lmadi! Linkni tekshiring.", message.chat.id, sent.id)
+
+print("Bot ishga tushdi...")
+bot.infinity_polling()
 bot.py      
 main.py
 app.py
