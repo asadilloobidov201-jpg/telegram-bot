@@ -26,9 +26,8 @@ def get_video(msg):
 
     if video:
         bot.send_video(msg.chat.id, video)
-    else:
-        bot.reply_to(msg, "❌ Video topilmadi. Linkni to‘g‘ri kiriting.")
-
+    
+bot.javob_berish(msg, "❌ Video topilmadi. Linkni to'g'ri kiriting.")
 bot.polling()
 
 bot.py
