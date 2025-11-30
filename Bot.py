@@ -1,35 +1,43 @@
 import telebot
 import requests
-BOT_TOKEN = "8292216685:AAHhGto9O_-oSBBe3bkKIe0Pyn7tzJFDPrc"
-bot = telebot.TeleBot(BOT_TOKEN)
 
-def download(url):
-    api = "https://api.savein.io/download?url=" + url
-    r = requests.get(api).json()
+TOKEN = "8292216685:AAHhGto9O_-oSBBe3bkKIe0Pyn7tzJFDPRc"
+bot = telebot.TeleBot(TOKEN)
 
+
+# --- Video yuklab olish funksiyasi ---
+def yuklab_oling(url):
     try:
-        video = r["result"]["adaptive"][0]["url"]
-        return video
+        r = requests.get(url)
+        if r.status_code == 200:
+            filename = "video.mp4"
+            with open(filename, "wb") as f:
+                f.write(r.content)
+            return filename
+        else:
+            return None
     except:
         return None
 
-@bot.message_handler(commands=['start'])
-def start(msg):
-    
-bot.javob_berish(msg, "🎬 Menga Instagram, YouTube yoki boshqa platformadan video havolasini yuboring!")
-@bot.message_handler(content_types=['text'])
 
+# --- Foydalanuvchi yuborgan linkni qayta ishlash ---
+@bot.message_handler(func=lambda m: True)
 def get_video(msg):
     url = msg.text
-    bot.javob_berish(msg, "⏳ Yuklab olinmoqda...")
+
+    bot.reply_to(msg, "⏳ Yuklab olinmoqda...")
 
     video = yuklab_oling(url)
 
     if video:
-        bot.yuborish_video(msg.suhbat.id, video)
-else:
-    bot.javob_berish(msg, "❌ Video topilmadi. Linkni to'g'ri kiriting.")
+        bot.send_video(msg.chat.id, open(video, "rb"))
+    else:
+        bot.reply_to(msg, "❌ Video topilmadi. Linkni to'g'ri kiriting.")
 
-        
+
+bot.polling()
+
+
+bot.py      
 main.py
 app.py
